@@ -30,8 +30,9 @@ const MainMenu = () => {
       <Header />
 
       {/* Body Section (Carousel) */}
-      <main className="flex-grow flex flex-col items-center w-full relative z-10 py-12">
-        <div className="relative w-full max-w-5xl h-[500px] overflow-hidden rounded-xl border-2 border-theme-gold shadow-[0_0_30px_var(--c-shadow)] bg-theme-surface group mb-16">
+      {/* Main Menu */}
+      <main className="flex-grow flex flex-col items-center w-full relative z-10">
+        <div className="relative w-full h-[600px] overflow-hidden group mb-16">
           
           {/* Slides Container */}
           <div 
@@ -43,6 +44,8 @@ const MainMenu = () => {
                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-30"></div>
                  <img src={slide.image} alt={slide.alt} className="w-auto h-24 md:h-32 mb-6 drop-shadow-lg z-10" />
                  <p className="text-xl md:text-2xl text-theme-light opacity-90 tracking-wider font-light italic z-10">{slide.desc}</p>
+                 {/* Gradient Fade to Bottom */}
+                 <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[var(--c-bg-main)] to-transparent z-20 pointer-events-none"></div>
               </div>
             ))}
           </div>
