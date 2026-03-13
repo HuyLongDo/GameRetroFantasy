@@ -7,8 +7,8 @@ const MainMenu = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
 
   const slides = [
-    { id: 1, image: "https://placehold.co/500x150/020617/fef3c7?text=HỘI+CHIẾN+BINH&font=serif", alt: "Hội Chiến Binh", desc: "Sức mạnh thiêng liêng từ ngọn lửa rồng.", color: "from-red-900/80 to-slate-900" },
-    { id: 2, image: "https://placehold.co/500x150/020617/fef3c7?text=RỪNG+YÊU+TINH&font=serif", alt: "Rừng Yêu Tinh", desc: "Bí mật ẩn giấu sau màn sương vĩnh cửu.", color: "from-emerald-900/80 to-slate-900" },
+    { id: 1, image: "./static/granblue-fantasy-chinh-thuc-do-bo-steam-tin-game-1.jpg", alt: "Hội Chiến Binh", desc: "Sức mạnh thiêng liêng từ ngọn lửa rồng.", color: "from-red-900/80 to-slate-900" },
+    { id: 2, image: "./static/resident-evil-requiem-4k-path-tracing-nvidia-dlss-4-trailer-00-00-31-1767699156677.webp", color: "from-emerald-900/80 to-slate-900" },
     { id: 3, image: "https://placehold.co/500x150/020617/fef3c7?text=LÃNH+ĐỊA+BĂNG&font=serif", alt: "Lãnh Địa Băng", desc: "Nơi chỉ những kẻ mạnh nhất mới tồn tại.", color: "from-cyan-900/80 to-slate-900" },
     { id: 4, image: "https://placehold.co/500x150/020617/fef3c7?text=THÁP+CỔ+XƯA&font=serif", alt: "Tháp Cổ Xưa", desc: "Kho báu huyền thoại đang chờ người sở hữu.", color: "from-amber-900/80 to-slate-900" },
   ]
@@ -40,12 +40,20 @@ const MainMenu = () => {
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
             {slides.map((slide) => (
-              <div key={slide.id} className={`min-w-full h-full flex flex-col items-center justify-center bg-gradient-to-br ${slide.color} relative`}>
-                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-30"></div>
-                 <img src={slide.image} alt={slide.alt} className="w-auto h-24 md:h-32 mb-6 drop-shadow-lg z-10" />
-                 <p className="text-xl md:text-2xl text-theme-light opacity-90 tracking-wider font-light italic z-10">{slide.desc}</p>
+              <div key={slide.id} className="min-w-full h-full relative flex flex-col items-center justify-center">
+                 {/* Background Image Full Size */}
+                 <img src={slide.image} alt={slide.alt} className="absolute inset-0 w-full h-full object-cover z-0" />
+                 
+                 {/* Overlay to ensure text readability */}
+                 <div className={`absolute inset-0 bg-gradient-to-br ${slide.color} mix-blend-multiply opacity-60 z-10`}></div>
+
+                 <div className="relative z-20 text-center px-4">
+                    <h2 className="text-4xl md:text-6xl font-bold text-theme-gold mb-4 drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] tracking-widest uppercase">{slide.alt}</h2>
+                    <p className="text-xl md:text-2xl text-theme-light tracking-wider font-light italic drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{slide.desc}</p>
+                 </div>
+
                  {/* Gradient Fade to Bottom */}
-                 <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[var(--c-bg-main)] to-transparent z-20 pointer-events-none"></div>
+                 <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-[var(--c-bg-main)] via-[var(--c-bg-main)]/80 to-transparent z-30 pointer-events-none"></div>
               </div>
             ))}
           </div>

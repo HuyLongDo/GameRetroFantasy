@@ -30,8 +30,13 @@ const GamePage = () => {
           <div className="lg:col-span-2 flex flex-col gap-6">
             {/* Ô đen chứa Game (Placeholder) */}
             <div className="w-full aspect-video bg-black border-2 border-theme-gold shadow-[0_0_20px_var(--c-shadow)] flex items-center justify-center relative rounded-lg overflow-hidden">
-              <p className="text-theme-dim animate-pulse font-mono">Đang tải tài nguyên game (ID: {id})...</p>
-              {/* Sau này bạn sẽ nhúng iframe hoặc canvas game vào đây */}
+              <iframe 
+                src={currentGame.embedUrl} 
+                title={currentGame.title}
+                className="w-full h-full border-none"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowFullScreen
+              ></iframe>
             </div>
 
             {/* Thông tin Game */}
