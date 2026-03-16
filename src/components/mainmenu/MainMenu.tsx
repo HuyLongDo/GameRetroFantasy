@@ -29,6 +29,9 @@ const MainMenu = () => {
       audioRef.current.volume = 0.3 // Đặt âm lượng 30%
       
       const tryPlay = () => {
+        // Nếu đang phát rồi thì thôi, không gọi lại để tránh lỗi
+        if (audioRef.current && !audioRef.current.paused) return
+
         const playPromise = audioRef.current?.play()
         if (playPromise !== undefined) {
           playPromise
@@ -38,9 +41,15 @@ const MainMenu = () => {
               document.removeEventListener('click', tryPlay)
               document.removeEventListener('keydown', tryPlay)
               window.removeEventListener('scroll', tryPlay)
+              window.removeEventListener('wheel', tryPlay)
+              window.removeEventListener('touchstart', tryPlay)
+              window.removeEventListener('touchmove', tryPlay)
             })
             .catch((error) => {
-              console.log("Autoplay prevented, waiting for interaction:", error)
+              // Chỉ log lỗi nếu không phải lỗi do người dùng chưa tương tác (để đỡ rác console)
+              if (error.name !== 'NotAllowedError') {
+                 console.log("Playback failed:", error)
+              }
               setIsPlaying(false)
             })
         }
@@ -53,11 +62,17 @@ const MainMenu = () => {
       document.addEventListener('click', tryPlay)
       document.addEventListener('keydown', tryPlay)
       window.addEventListener('scroll', tryPlay)
+      window.addEventListener('wheel', tryPlay)     // Bắt sự kiện lăn chuột
+      window.addEventListener('touchstart', tryPlay) // Bắt sự kiện chạm màn hình
+      window.addEventListener('touchmove', tryPlay)  // Bắt sự kiện vuốt
 
       return () => {
         document.removeEventListener('click', tryPlay)
         document.removeEventListener('keydown', tryPlay)
         window.removeEventListener('scroll', tryPlay)
+        window.removeEventListener('wheel', tryPlay)
+        window.removeEventListener('touchstart', tryPlay)
+        window.removeEventListener('touchmove', tryPlay)
       }
     }
   }, [])

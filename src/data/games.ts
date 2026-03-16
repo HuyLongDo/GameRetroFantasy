@@ -9,13 +9,11 @@ export interface Game {
 }
 
 export const categories = [
-  'Action',
-  'Adventure',
-  'Puzzle',
-  'Racing',
-  'Sports',
-  'Strategy',
-  'Shooting',
+  'NES',
+  'SNES',
+  'GBA',
+  'Genesis',
+  'PS1',
   'Arcade',
 ]
 

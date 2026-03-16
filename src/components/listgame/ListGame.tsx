@@ -1,19 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { PlayCircle, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { games } from '../../data/games'
 import ButtonOrange from '../layouttheme/button/ButtonOrange'
 
 const ListGame = () => {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [currentPage, setCurrentPage] = useState(1)
   
+  const categoryFilter = searchParams.get('category')
+  const filteredGames = categoryFilter 
+    ? games.filter(game => game.category === categoryFilter) 
+    : games
+
   // Cấu hình phân trang: 4 cột x 4 hàng = 16 game/trang
   const itemsPerPage = 16
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const currentGames = games.slice(indexOfFirstItem, indexOfLastItem)
-  const totalPages = Math.ceil(games.length / itemsPerPage)
+  const currentGames = filteredGames.slice(indexOfFirstItem, indexOfLastItem)
+  const totalPages = Math.ceil(filteredGames.length / itemsPerPage)
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber)
@@ -22,9 +28,16 @@ const ListGame = () => {
     if (listElement) listElement.scrollIntoView({ behavior: 'smooth' })
   }
 
+  // Reset về trang 1 khi thay đổi bộ lọc
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [categoryFilter])
+
   return (
   <div className="flex flex-col items-center w-full">
-    <h1 id="game-list-start" className='text-[30px] mb-10 text-theme-gold font-bold uppercase tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]'>Thư viện Game</h1>
+    <h1 id="game-list-start" className='text-[30px] mb-10 text-theme-gold font-bold uppercase tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]'>
+      {categoryFilter ? `Danh mục: ${categoryFilter}` : 'Thư viện Game'}
+    </h1>
     <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 font-serif mb-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
 

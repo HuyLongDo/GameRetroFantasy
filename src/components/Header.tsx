@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, createSearchParams } from 'react-router-dom'
 import { Search, ChevronDown } from 'lucide-react'
 import { categories } from '../data/games'
 
@@ -35,13 +35,16 @@ const Header = () => {
                 {isCategoryOpen && (
                   <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 p-4 bg-theme-surface border border-theme-gold rounded-lg shadow-[0_4px_20px_var(--c-shadow)] grid grid-cols-2 gap-2 z-50 backdrop-blur-md animate-in fade-in slide-in-from-top-2 duration-200">
                     {categories.map((cat) => (
-                      <a 
+                      <button 
                         key={cat} 
-                        href="#" 
-                        className="text-theme-muted hover:text-theme-accent text-xs font-serif tracking-wide py-1 px-2 hover:bg-theme-main/50 rounded transition-colors"
+                        onClick={() => {
+                          navigate({ pathname: '/', search: createSearchParams({ category: cat }).toString() })
+                          setIsCategoryOpen(false)
+                        }}
+                        className="text-left text-theme-muted hover:text-theme-accent text-xs font-serif tracking-wide py-1 px-2 hover:bg-theme-main/50 rounded transition-colors"
                       >
                         {cat}
-                      </a>
+                      </button>
                     ))}
                   </div>
                 )}
