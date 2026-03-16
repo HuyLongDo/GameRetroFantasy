@@ -62,7 +62,7 @@ const MainMenu = () => {
   return (
     <div className="min-h-screen flex flex-col bg-theme-main text-theme-main font-serif overflow-hidden relative">
       {/* Background Music */}
-      <audio ref={audioRef} src="/Granblue Fantasy Versus Soundtrack - Main Menu.mp3" loop autoPlay />
+      <audio ref={audioRef} src="/Granblue%20Fantasy%20Versus%20Soundtrack%20-%20Main%20Menu.mp3" loop autoPlay />
 
       {/* Background Effect */}
       <div className="absolute inset-0 z-0 opacity-20 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[var(--c-border-gold)] via-[var(--c-bg-main)] to-black"></div>

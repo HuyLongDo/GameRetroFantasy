@@ -1,15 +1,17 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Search, ChevronDown } from 'lucide-react'
 import { categories } from '../data/games'
 
 const Header = () => {
+  const navigate = useNavigate()
   const [isCategoryOpen, setIsCategoryOpen] = useState(false)
   const navItems = ['Game', 'ROMS', 'Danh mục']
 
   return (
     <header className="w-full h-20 px-8 flex items-center justify-between bg-theme-header border-b border-theme-gold-dim backdrop-blur-sm shadow-[0_4px_20px_var(--c-shadow)] z-50 sticky top-0">
       {/* Left: Logo */}
-      <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+      <div onClick={() => navigate('/')} className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
         <div className="text-xl md:text-2xl font-extrabold tracking-widest text-transparent bg-clip-text text-gradient-gold font-serif filter drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]">
           RETRO FANTASY
         </div>
