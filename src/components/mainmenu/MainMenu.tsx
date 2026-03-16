@@ -1,28 +1,69 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { Volume2, VolumeX } from 'lucide-react'
 import Header from '../Header'
 import Footer from '../Footer'
 import ListGame  from '../listgame/ListGame'
 
 const MainMenu = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement>(null)
 
   const slides = [
-    { id: 1, image: "./static/granblue-fantasy-chinh-thuc-do-bo-steam-tin-game-1.jpg", alt: "Hội Chiến Binh", desc: "Sức mạnh thiêng liêng từ ngọn lửa rồng.", color: "from-red-900/80 to-slate-900" },
-    { id: 2, image: "./static/resident-evil-requiem-4k-path-tracing-nvidia-dlss-4-trailer-00-00-31-1767699156677.webp", color: "from-emerald-900/80 to-slate-900" },
-    { id: 3, image: "https://placehold.co/500x150/020617/fef3c7?text=LÃNH+ĐỊA+BĂNG&font=serif", alt: "Lãnh Địa Băng", desc: "Nơi chỉ những kẻ mạnh nhất mới tồn tại.", color: "from-cyan-900/80 to-slate-900" },
-    { id: 4, image: "https://placehold.co/500x150/020617/fef3c7?text=THÁP+CỔ+XƯA&font=serif", alt: "Tháp Cổ Xưa", desc: "Kho báu huyền thoại đang chờ người sở hữu.", color: "from-amber-900/80 to-slate-900" },
+    { id: 1, image: "./static/granblue-fantasy-chinh-thuc-do-bo-steam-tin-game-1.jpg", alt: "Lets play the game", desc: "", color: "from-red-900/80 to-slate-900" },
+    { id: 2, image: "./static/granblue-fantasy-relink-endless-ragnarok-ra-mat-thang-7-2026-tin-game-4.jpg", color: "from-emerald-900/90 to-slate-900" },
+    { id: 3, image: "./static/street-fighter-6-hero-page-banner-desktop-01-en-19may23.webp", alt: "", desc: "", color: "from-cyan-900/80 to-slate-900" },
+    { id: 4, image: "./static/blueprotol.webp", alt: "", desc: "", color: "from-amber-900/80 to-slate-900" },
   ]
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length)
-    }, 4000) // Chuyển slide mỗi 4 giây
+    }, 6000) // Chuyển slide mỗi 4 giây
 
     return () => clearInterval(interval)
   }, [slides.length])
 
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.3 // Đặt âm lượng 30%
+      
+      const tryPlay = () => {
+        const playPromise = audioRef.current?.play()
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true)
+              // Gỡ bỏ sự kiện sau khi đã phát thành công
+              document.removeEventListener('click', tryPlay)
+              document.removeEventListener('keydown', tryPlay)
+            })
+            .catch((error) => {
+              console.log("Autoplay prevented, waiting for interaction:", error)
+              setIsPlaying(false)
+            })
+        }
+      }
+
+      // Thử phát ngay lập tức
+      tryPlay()
+
+      // Nếu bị chặn, phát ngay khi người dùng tương tác lần đầu
+      document.addEventListener('click', tryPlay)
+      document.addEventListener('keydown', tryPlay)
+
+      return () => {
+        document.removeEventListener('click', tryPlay)
+        document.removeEventListener('keydown', tryPlay)
+      }
+    }
+  }, [])
+
   return (
     <div className="min-h-screen flex flex-col bg-theme-main text-theme-main font-serif overflow-hidden relative">
+      {/* Background Music */}
+      <audio ref={audioRef} src="/Granblue Fantasy Versus Soundtrack - Main Menu.mp3" loop autoPlay />
+
       {/* Background Effect */}
       <div className="absolute inset-0 z-0 opacity-20 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[var(--c-border-gold)] via-[var(--c-bg-main)] to-black"></div>
 
@@ -45,10 +86,10 @@ const MainMenu = () => {
                  <img src={slide.image} alt={slide.alt} className="absolute inset-0 w-full h-full object-cover z-0" />
                  
                  {/* Overlay to ensure text readability */}
-                 <div className={`absolute inset-0 bg-gradient-to-br ${slide.color} mix-blend-multiply opacity-60 z-10`}></div>
+                 <div className={`absolute inset-0 bg-gradient-to-br ${slide.color} mix-blend-multiply opacity-10 z-10`}></div>
 
-                 <div className="relative z-20 text-center px-4">
-                    <h2 className="text-4xl md:text-6xl font-bold text-theme-gold mb-4 drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] tracking-widest uppercase">{slide.alt}</h2>
+                 <div className="relative z-20 text-center mt-40 px-4">
+                    <h2 className="text-xl md:text-2xl font-bold text-white mb-2 drop-shadow-[0_5px_5px_rgba(0,0,0,0.9)] tracking-[0.3em] uppercase">{slide.alt}</h2>
                     <p className="text-xl md:text-2xl text-theme-light tracking-wider font-light italic drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{slide.desc}</p>
                  </div>
 
@@ -57,7 +98,7 @@ const MainMenu = () => {
               </div>
             ))}
           </div>
-
+          
           {/* Indicators */}
           <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
             {slides.map((_, index) => (
@@ -75,6 +116,20 @@ const MainMenu = () => {
       <ListGame />
       
       </main>
+
+      {/* Music Toggle Button */}
+      <button 
+        onClick={() => {
+          if (audioRef.current) {
+            if (isPlaying) audioRef.current.pause()
+            else audioRef.current.play()
+            setIsPlaying(!isPlaying)
+          }
+        }}
+        className="fixed bottom-8 right-8 z-50 p-3 bg-theme-surface/80 border border-theme-gold text-theme-gold rounded-full hover:bg-theme-gold hover:text-theme-main transition-all duration-300 shadow-[0_0_15px_var(--c-shadow)]"
+      >
+        {isPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}
+      </button>
 
       {/* Footer Component */}
       <Footer />
