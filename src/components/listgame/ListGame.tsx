@@ -30,6 +30,7 @@ const ListGame = () => {
 
   // Reset về trang 1 khi thay đổi bộ lọc
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPage(1)
   }, [categoryFilter])
 
