@@ -12,7 +12,7 @@ const MainMenu = () => {
   const slides = [
     { id: 1, image: "./static/granblue-fantasy-chinh-thuc-do-bo-steam-tin-game-1.jpg", alt: "Lets play the game", desc: "", color: "from-red-900/80 to-slate-900" },
     { id: 2, image: "./static/granblue-fantasy-relink-endless-ragnarok-ra-mat-thang-7-2026-tin-game-4.jpg", color: "from-emerald-900/90 to-slate-900" },
-    { id: 3, image: "./static/street-fighter-6-hero-page-banner-desktop-01-en-19may23.webp", alt: "", desc: "", color: "from-cyan-900/80 to-slate-900" },
+    { id: 3, image: "./static/grancypher.jpg", alt: "", desc: "", color: "from-cyan-900/80 to-slate-900" },
     { id: 4, image: "./static/blueprotol.webp", alt: "", desc: "", color: "from-amber-900/80 to-slate-900" },
   ]
 
@@ -91,7 +91,7 @@ const MainMenu = () => {
       {/* Body Section (Carousel) */}
       {/* Main Menu */}
       <main className="flex-grow flex flex-col items-center w-full relative z-10">
-        <div className="relative w-full h-[600px] overflow-hidden group mb-16">
+        <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden group mb-16">
           
           {/* Slides Container */}
           <div 
@@ -106,13 +106,13 @@ const MainMenu = () => {
                  {/* Overlay to ensure text readability */}
                  <div className={`absolute inset-0 bg-gradient-to-br ${slide.color} mix-blend-multiply opacity-10 z-10`}></div>
 
-                 <div className="relative z-20 text-center mt-40 px-4">
-                    <h2 className="text-xl md:text-2xl font-bold text-white mb-2 drop-shadow-[0_5px_5px_rgba(0,0,0,0.9)] tracking-[0.3em] uppercase">{slide.alt}</h2>
-                    <p className="text-xl md:text-2xl text-theme-light tracking-wider font-light italic drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{slide.desc}</p>
+                 <div className="relative z-20 text-center mt-24 md:mt-32 lg:mt-40 px-4">
+                    <h2 className="text-lg md:text-2xl font-bold text-white mb-2 drop-shadow-[0_5px_5px_rgba(0,0,0,0.9)] tracking-[0.2em] md:tracking-[0.3em] uppercase">{slide.alt}</h2>
+                    <p className="text-base md:text-xl text-theme-light tracking-wider font-light italic drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{slide.desc}</p>
                  </div>
 
                  {/* Gradient Fade to Bottom */}
-                 <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-[var(--c-bg-main)] via-[var(--c-bg-main)]/80 to-transparent z-30 pointer-events-none"></div>
+                 <div className="absolute bottom-0 left-0 w-full h-48 md:h-64 bg-gradient-to-t from-[var(--c-bg-main)] via-[var(--c-bg-main)]/80 to-transparent z-30 pointer-events-none"></div>
               </div>
             ))}
           </div>

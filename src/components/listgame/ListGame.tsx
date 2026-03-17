@@ -1,18 +1,43 @@
 import { useState, useEffect } from 'react'
 import { PlayCircle, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { games } from '../../data/games'
 import ButtonOrange from '../layouttheme/button/ButtonOrange'
+import SyncDataButton from '../../data/SyncDataButton'
+import axios from 'axios'
+import { type Game } from '../../data/games'
+
+const API_URL = 'https://69b8da52e69653ffe6a5b3ce.mockapi.io/api/gameretro/games';
 
 const ListGame = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const [currentPage, setCurrentPage] = useState(1)
+
+  // Loading game
+  const [allGames, setAllGames] = useState<Game[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(API_URL);
+        setAllGames(response.data);
+        setError(null);
+      } catch (err) {
+        setError('Không thể tải danh sách game. Vui lòng thử lại sau.');
+        console.error("Failed to fetch games:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchGames();
+  }, []);
   
+  // Lọc game theo category
   const categoryFilter = searchParams.get('category')
-  const filteredGames = categoryFilter 
-    ? games.filter(game => game.category === categoryFilter) 
-    : games
+  const filteredGames = categoryFilter ? allGames.filter(game => game.category === categoryFilter) : allGames
 
   // Cấu hình phân trang: 4 cột x 4 hàng = 16 game/trang
   const itemsPerPage = 16
@@ -34,13 +59,27 @@ const ListGame = () => {
     setCurrentPage(1)
   }, [categoryFilter])
 
+  if (loading) {
+    return <div className="text-center text-theme-gold text-xl p-10">Đang tải thư viện game...</div>
+  }
+
+  if (error) {
+    return <div className="text-center text-red-400 text-xl p-10">{error}</div>
+  }
+
   return (
   <div className="flex flex-col items-center w-full">
     <h1 id="game-list-start" className='text-[30px] mb-10 text-theme-gold font-bold uppercase tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]'>
-      {categoryFilter ? `Danh mục: ${categoryFilter}` : 'Thư viện Game'}
+      {categoryFilter ? `Thể loại ${categoryFilter}` : 'Thư viện Game'}
     </h1>
     <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 font-serif mb-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+        {currentGames.length === 0 && !loading && (
+          <div className="col-span-full text-center text-theme-muted py-10">
+            <p>Không tìm thấy game nào trong danh mục này.</p>
+          </div>
+        )}
 
         {currentGames.map((game) => (
           <div 
@@ -104,6 +143,11 @@ const ListGame = () => {
           </button>
         </div>
       )}
+
+      {/* Nút để đồng bộ dữ liệu lên MockAPI (chỉ dùng cho mục đích phát triển) */}
+      <div className="flex justify-center mt-12">
+        <SyncDataButton />
+      </div>
     </div>
   </div>
   )
