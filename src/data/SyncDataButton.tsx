@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { useCallback, useState } from 'react';
-import { games } from './games';
+import { games, type Game } from './games';
 
-// QUAN TRỌNG: Hãy thay thế 'xxxxxx' bằng Project ID của bạn trên MockAPI
 const API_URL = 'https://69b8da52e69653ffe6a5b3ce.mockapi.io/api/gameretro/games'; 
 
 const SyncDataButton = () => {
@@ -11,29 +10,31 @@ const SyncDataButton = () => {
     const handleSyncData = useCallback(async () => {
         setIsUploading(true);
         try {
-            // Bước 1: Kiểm tra xem trên MockAPI đã có dữ liệu chưa
+            // Bước 1: Lấy danh sách ID hiện tại để xóa
             const checkResponse = await axios.get(API_URL);
+            const apiGames: Game[] = checkResponse.data;
+
+            // Bước 2: Xóa sạch data cũ
+            if (apiGames.length > 0) {
+                console.log(`Đang xóa ${apiGames.length} game cũ (tuần tự để tránh lỗi)...`);
+                // Dùng vòng lặp for...of để xóa tuần tự, tránh làm sập MockAPI
+                for (const game of apiGames) {
+                    await axios.delete(`${API_URL}/${game.id}`);
+                }
+            }
             
-            if (checkResponse.data && checkResponse.data.length > 0) {
-                alert(`Đã có ${checkResponse.data.length} game trên hệ thống. Không cần upload thêm.`);
-                return;
+            // Bước 3: Upload dữ liệu mới từ file
+            console.log(`Đang upload ${games.length} game mới...`);
+            for (const game of games) {
+                await axios.post(API_URL, game);
             }
 
-            // Bước 2: Nếu chưa có dữ liệu, thực hiện upload hàng loạt
-            console.log(`Đang khởi tạo ${games.length} game lên MockAPI...`);
-            
-            const uploadRequests = games.map(game => {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const { id, ...gameWithoutId } = game; 
-                return axios.post(API_URL, gameWithoutId);
-            });
+            alert("Đã làm mới dữ liệu thành công! Trang sẽ tải lại.");
+            window.location.reload();
 
-            await Promise.all(uploadRequests);
-            
-            alert(` Upload thành công toàn bộ ${games.length} game!`);
         } catch (error) {
             console.error("Lỗi khi đồng bộ dữ liệu:", error);
-            alert("Có lỗi xảy ra khi upload dữ liệu. Vui lòng kiểm tra Console và API_URL.");
+            alert("Có lỗi xảy ra (có thể do quá tải API). Hãy thử bấm Đồng bộ lại lần nữa.");
         } finally {
             setIsUploading(false);
         }
@@ -45,7 +46,7 @@ const SyncDataButton = () => {
             disabled={isUploading}
             className={`px-4 py-2 rounded ${isUploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} text-white transition-colors`}
         >
-            {isUploading ? 'Đang kiểm tra & Upload...' : 'Load game'}
+            {isUploading ? 'Đang đồng bộ...' : 'Đồng bộ & Cập nhật API'}
         </button>
     );
 };

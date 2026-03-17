@@ -53,6 +53,18 @@ const ListGame = () => {
     if (listElement) listElement.scrollIntoView({ behavior: 'smooth' })
   }
 
+  // Tính toán dải phân trang để không hiện quá nhiều nút (chỉ hiện tối đa 5 trang)
+  const getPaginationGroup = () => {
+    const maxButtons = 5
+    let start = Math.max(1, currentPage - 2)
+    // eslint-disable-next-line prefer-const
+    let end = Math.min(totalPages, start + maxButtons - 1)
+    
+    if (end - start < maxButtons - 1) start = Math.max(1, end - maxButtons + 1)
+    
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i)
+  }
+
   // Reset về trang 1 khi thay đổi bộ lọc
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -83,7 +95,8 @@ const ListGame = () => {
 
         {currentGames.map((game) => (
           <div 
-            key={game.id} 
+            // Dùng kết hợp id và random để tránh lỗi key trùng nhau nếu API bị duplicate dữ liệu
+            key={`${game.id}-${Math.random()}`} 
             className="bg-theme-surface border border-theme-gold-dark rounded-lg overflow-hidden shadow-[0_8px_30px_var(--c-shadow)] group transform transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_var(--c-shadow)]"
           >
             <div 
@@ -120,7 +133,11 @@ const ListGame = () => {
             <ChevronLeft size={24} />
           </button>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
+          {getPaginationGroup().length > 0 && getPaginationGroup()[0] > 1 && (
+             <span className="px-2 text-theme-gold">...</span>
+          )}
+
+          {getPaginationGroup().map((number) => (
             <button
               key={number}
               onClick={() => handlePageChange(number)}
@@ -133,6 +150,10 @@ const ListGame = () => {
               {number}
             </button>
           ))}
+
+          {getPaginationGroup().length > 0 && getPaginationGroup()[getPaginationGroup().length - 1] < totalPages && (
+             <span className="px-2 text-theme-gold">...</span>
+          )}
 
           <button
             onClick={() => handlePageChange(currentPage + 1)}
