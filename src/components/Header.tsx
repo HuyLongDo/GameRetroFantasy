@@ -6,7 +6,16 @@ import { categories } from '../data/games'
 const Header = () => {
   const navigate = useNavigate()
   const [isCategoryOpen, setIsCategoryOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
   const navItems = ['Game', 'ROMS', 'Danh mục']
+
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate({ pathname: '/', search: createSearchParams({ search: searchTerm }).toString() })
+    } else {
+      navigate('/')
+    }
+  }
 
   return (
     <header className="w-full h-20 px-8 flex items-center justify-between bg-theme-header border-b border-theme-gold-dim backdrop-blur-sm shadow-[0_4px_20px_var(--c-shadow)] z-50 sticky top-0">
@@ -69,9 +78,12 @@ const Header = () => {
         <input
           type="text"
           placeholder="Tìm kiếm..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           className="bg-theme-input text-theme-light border border-theme-gold-dark/50 rounded-full py-2 pl-4 pr-10 focus:outline-none focus:border-theme-gold-light focus:ring-1 focus:ring-theme-gold-light/50 transition-all w-40 focus:w-64 placeholder-theme-gold-dark font-serif text-sm opacity-90"
         />
-        <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-gold w-4 h-4 hover-text-theme-highlight transition-colors" />
+        <Search onClick={handleSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-gold w-4 h-4 hover-text-theme-highlight transition-colors cursor-pointer" />
       </div>
     </header>
   )

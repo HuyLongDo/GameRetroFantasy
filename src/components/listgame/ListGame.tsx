@@ -35,9 +35,15 @@ const ListGame = () => {
     fetchGames();
   }, []);
   
-  // Lọc game theo category
+  // Lọc game theo category và search
   const categoryFilter = searchParams.get('category')
-  const filteredGames = categoryFilter ? allGames.filter(game => game.category === categoryFilter) : allGames
+  const searchFilter = searchParams.get('search')
+  
+  const filteredGames = allGames.filter(game => {
+    const matchCategory = categoryFilter ? game.category === categoryFilter : true
+    const matchSearch = searchFilter ? game.title.toLowerCase().includes(searchFilter.toLowerCase()) : true
+    return matchCategory && matchSearch
+  })
 
   // Cấu hình phân trang: 4 cột x 4 hàng = 16 game/trang
   const itemsPerPage = 16
@@ -69,7 +75,7 @@ const ListGame = () => {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPage(1)
-  }, [categoryFilter])
+  }, [categoryFilter, searchFilter])
 
   if (loading) {
     return <div className="text-center text-theme-gold text-xl p-10">Đang tải thư viện game...</div>
@@ -79,10 +85,15 @@ const ListGame = () => {
     return <div className="text-center text-red-400 text-xl p-10">{error}</div>
   }
 
+  // Tạo tiêu đề động dựa trên bộ lọc
+  let title = 'Thư viện Game'
+  if (searchFilter) title = `Kết quả tìm kiếm: "${searchFilter}"`
+  else if (categoryFilter) title = `Thể loại ${categoryFilter}`
+
   return (
   <div className="flex flex-col items-center w-full">
     <h1 id="game-list-start" className='text-[30px] mb-10 text-theme-gold font-bold uppercase tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]'>
-      {categoryFilter ? `Thể loại ${categoryFilter}` : 'Thư viện Game'}
+      {title}
     </h1>
     <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 font-serif mb-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">

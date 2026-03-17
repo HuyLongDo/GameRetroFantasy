@@ -44,9 +44,9 @@ const SyncDataButton = () => {
         <button 
             onClick={handleSyncData} 
             disabled={isUploading}
-            className={`px-4 py-2 rounded ${isUploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} text-white transition-colors`}
+            className={`opacity-1 cursor-pointer px-4 py-2 rounded ${isUploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} text-white transition-colors`}
         >
-            {isUploading ? 'Đang đồng bộ...' : 'Đồng bộ & Cập nhật API'}
+            {isUploading ? 'Đang đồng bộ...' : 'Load game mới'}
         </button>
     );
 };
