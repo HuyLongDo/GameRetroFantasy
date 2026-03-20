@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { PlayCircle, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import ButtonOrange from '../layouttheme/button/ButtonOrange'
-import SyncDataButton from '../../data/SyncDataButton'
+import ButtonOrange from '../../layout/button/ButtonOrange'
+import SyncDataButton from '../api/SyncDataButton'
 import axios from 'axios'
 import { type Game } from '../../data/games'
 
-const API_URL = 'https://69b8da52e69653ffe6a5b3ce.mockapi.io/api/gameretro/games';
+const API_URL = 'https://69b8da52e69653ffe6a5b3ce.mockapi.io/api/gameretro';
 
 const ListGame = () => {
   const navigate = useNavigate()
@@ -65,9 +65,7 @@ const ListGame = () => {
     let start = Math.max(1, currentPage - 2)
     // eslint-disable-next-line prefer-const
     let end = Math.min(totalPages, start + maxButtons - 1)
-    
     if (end - start < maxButtons - 1) start = Math.max(1, end - maxButtons + 1)
-    
     return Array.from({ length: end - start + 1 }, (_, i) => start + i)
   }
 
@@ -152,8 +150,8 @@ const ListGame = () => {
             <button
               key={number}
               onClick={() => handlePageChange(number)}
-              className={`w-10 h-10 flex items-center justify-center rounded-lg border font-bold text-lg transition-all duration-300 ${
-                currentPage === number
+              className={`w-10 h-10 flex items-center justify-center rounded-lg border font-bold text-lg transition-all 
+                duration-300 ${currentPage === number
                   ? 'bg-theme-gold text-theme-main border-theme-gold shadow-[0_0_10px_var(--c-shadow)] scale-110'
                   : 'bg-theme-surface border-theme-gold/30 text-theme-muted hover:border-theme-gold hover:text-theme-light'
               }`}
