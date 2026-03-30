@@ -1,7 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { ChevronRight, Gamepad2 } from 'lucide-react'
-import Header from '../Header'
-import Footer from '../Footer'
 import { games } from '../../data/games'
 
 const GamePage = () => {
@@ -20,10 +18,7 @@ const GamePage = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-theme-main text-theme-main font-serif">
-      <Header />
-
-      <main className="flex-grow w-full max-w-[1920px] mx-auto p-4 lg:p-8">
+      <div className="w-full max-w-[1920px] mx-auto p-4 lg:p-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Cột Trái: Khu vực chơi game */}
@@ -70,10 +65,7 @@ const GamePage = () => {
             </div>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
   )
 }
 

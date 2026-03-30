@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, createSearchParams } from 'react-router-dom'
-import { Search, ChevronDown } from 'lucide-react'
+import { Search, ChevronDown, Volume2, VolumeX } from 'lucide-react'
 import { categories } from '../data/games'
 
 const Header = () => {
@@ -8,6 +8,57 @@ const Header = () => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const navItems = ['Game', 'ROMS', 'Danh mục']
+
+  // Music logic
+  const [isPlaying, setIsPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement>(null)
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.3
+      
+      const tryPlay = () => {
+        if (audioRef.current && !audioRef.current.paused) return
+
+        const playPromise = audioRef.current?.play()
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true)
+              document.removeEventListener('click', tryPlay)
+              document.removeEventListener('keydown', tryPlay)
+              window.removeEventListener('scroll', tryPlay)
+              window.removeEventListener('wheel', tryPlay)
+              window.removeEventListener('touchstart', tryPlay)
+              window.removeEventListener('touchmove', tryPlay)
+            })
+            .catch((error) => {
+              if (error.name !== 'NotAllowedError') {
+                 console.log("Playback failed:", error)
+              }
+              setIsPlaying(false)
+            })
+        }
+      }
+
+      tryPlay()
+      document.addEventListener('click', tryPlay)
+      document.addEventListener('keydown', tryPlay)
+      window.addEventListener('scroll', tryPlay)
+      window.addEventListener('wheel', tryPlay)
+      window.addEventListener('touchstart', tryPlay)
+      window.addEventListener('touchmove', tryPlay)
+
+      return () => {
+        document.removeEventListener('click', tryPlay)
+        document.removeEventListener('keydown', tryPlay)
+        window.removeEventListener('scroll', tryPlay)
+        window.removeEventListener('wheel', tryPlay)
+        window.removeEventListener('touchstart', tryPlay)
+        window.removeEventListener('touchmove', tryPlay)
+      }
+    }
+  }, [])
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
@@ -18,6 +69,10 @@ const Header = () => {
   }
 
   return (
+    <>
+    {/* Background Music */}
+    <audio ref={audioRef} src="/Granblue%20Fantasy%20Versus%20Soundtrack%20-%20Main%20Menu.mp3" loop />
+
     <header className="w-full h-20 px-8 flex items-center justify-between bg-theme-header border-b border-theme-gold-dim backdrop-blur-sm shadow-[0_4px_20px_var(--c-shadow)] z-50 sticky top-0">
       {/* Left: Logo */}
       <div onClick={() => navigate('/')} className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
@@ -102,6 +157,21 @@ const Header = () => {
         <Search onClick={handleSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-gold w-4 h-4 hover-text-theme-highlight transition-colors cursor-pointer" />
       </div>
     </header>
+
+    {/* Music Toggle Button */}
+    <button 
+      onClick={() => {
+        if (audioRef.current) {
+          if (isPlaying) audioRef.current.pause()
+          else audioRef.current.play()
+          setIsPlaying(!isPlaying)
+        }
+      }}
+      className="fixed bottom-8 right-8 z-50 p-3 bg-theme-surface/80 border border-theme-gold text-theme-gold rounded-full hover:bg-theme-gold hover:text-theme-main transition-all duration-300 shadow-[0_0_15px_var(--c-shadow)]"
+    >
+      {isPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}
+    </button>
+    </>
   )
 }
 
