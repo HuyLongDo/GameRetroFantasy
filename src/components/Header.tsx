@@ -29,6 +29,22 @@ const Header = () => {
       {/* Center: Nav Items */}
       <nav className="hidden md:flex items-center gap-12">
         {navItems.map((item) => {
+          // Roms
+          if (item === 'ROMS') {
+            return (
+              <a
+                key={item}
+                href="https://www.retrogames.cc/search?q=mega&system="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-theme-light opacity-70 hover:opacity-100 hover-text-theme-highlight font-serif font-bold uppercase tracking-wider text-sm transition-all duration-300 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] relative group"
+              >
+                {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-theme-accent transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100"></span>
+              </a>
+            )
+          }
+          // Danh mục
           if (item === 'Danh mục') {
             return (
               <div key={item} className="relative">
