@@ -84,6 +84,20 @@ const Header = () => {
       {/* Center: Nav Items */}
       <nav className="hidden md:flex items-center gap-12">
         {navItems.map((item) => {
+          // Game
+          if (item === 'Game') {
+            return (
+              <button
+                key={item}
+                onClick={() => navigate('/')}
+                className="text-theme-light opacity-70 hover:opacity-100 hover-text-theme-highlight font-serif font-bold uppercase tracking-wider text-sm transition-all duration-300 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] relative group"
+              >
+                {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-theme-accent transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100"></span>
+              </button>
+            )
+          }
+
           // Roms
           if (item === 'ROMS') {
             return (
