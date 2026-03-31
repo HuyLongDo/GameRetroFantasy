@@ -6,7 +6,7 @@ const MainMenu = () => {
 
   const slides = [
     { id: 1, image: "./static/granblue-fantasy-chinh-thuc-do-bo-steam-tin-game-1.jpg", alt: "Lets play the game", desc: "", color: "from-red-900/80 to-slate-900" },
-    { id: 2, image: "./static/granblue-fantasy-relink-endless-ragnarok-ra-mat-thang-7-2026-tin-game-4.jpg", color: "from-emerald-900/90 to-slate-900" },
+    { id: 2, image: "./static/skygb.jpg", color: "from-emerald-900/90 to-slate-900" },
     { id: 3, image: "./static/grancypher.jpg", alt: "", desc: "", color: "from-cyan-900/80 to-slate-900" },
     { id: 4, image: "./static/blueprotol.webp", alt: "", desc: "", color: "from-amber-900/80 to-slate-900" },
   ]

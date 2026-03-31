@@ -175,7 +175,7 @@ const ListGame = () => {
       )}
 
       {/* Nút để đồng bộ dữ liệu lên MockAPI (chỉ dùng cho mục đích phát triển) */}
-      <div className="flex justify-center mt-12">
+      <div className="invisible flex justify-center mt-12">
         <SyncDataButton />
       </div>
     </div>
